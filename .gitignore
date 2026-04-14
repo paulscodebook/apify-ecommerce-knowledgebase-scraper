@@ -1,0 +1,6 @@
+node_modules/
+dist/
+apify_storage/
+.env
+.npm
+.DS_Store

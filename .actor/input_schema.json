@@ -1,0 +1,90 @@
+{
+    "title": "Ecommerce Knowledgebase Scraper Input Schema",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "startUrls": {
+            "title": "Start URLs",
+            "type": "array",
+            "description": "List of ecommerce store URLs or sitemaps to start crawling from.",
+            "editor": "requestListSources",
+            "prefill": [
+                { "url": "https://vault-demo-store.myshopify.com/" }
+            ]
+        },
+        "includeSections": {
+            "title": "Sections to Include",
+            "type": "array",
+            "description": "Which types of pages should be extracted and chunked?",
+            "items": { "type": "string" },
+            "editor": "select",
+            "prefill": ["products", "collections", "faq", "policies"],
+            "default": ["products", "collections", "faq", "policies"],
+            "enum": ["products", "collections", "faq", "policies", "reviews_qna", "blog", "general_pages"]
+        },
+        "maxPages": {
+            "title": "Max Pages to Crawl",
+            "type": "integer",
+            "description": "Maximum number of pages the crawler will visit.",
+            "prefill": 500,
+            "default": 1000
+        },
+        "maxProducts": {
+            "title": "Max Products to Extract",
+            "type": "integer",
+            "description": "Limit the number of products extracted. Leave empty for no limit.",
+            "prefill": 100
+        },
+        "maxDepth": {
+            "title": "Max Crawl Depth",
+            "type": "integer",
+            "description": "How deep to follow links from the start URL. (0 means only start URLs).",
+            "prefill": 10,
+            "default": 10
+        },
+        "chunkSizeTokens": {
+            "title": "Target Chunk Size (Tokens)",
+            "type": "integer",
+            "description": "The approximate maximum number of tokens per RAG chunk.",
+            "prefill": 500,
+            "default": 500
+        },
+        "outputMode": {
+            "title": "Output Mode",
+            "type": "string",
+            "description": "What data should the actor output?",
+            "editor": "select",
+            "prefill": "both",
+            "default": "both",
+            "enum": ["catalog_only", "knowledge_only", "both"],
+            "enumTitles": ["Catalog Only (Products)", "Knowledge Only (RAG Chunks)", "Both (Catalog & Knowledge)"]
+        },
+        "respectRobotsTxt": {
+            "title": "Respect robots.txt",
+            "type": "boolean",
+            "description": "If enabled, crawler will not visit pages blocked by robots.txt.",
+            "prefill": false,
+            "default": false
+        },
+        "proxyConfiguration": {
+            "title": "Proxy Configuration",
+            "type": "object",
+            "editor": "proxy",
+            "description": "Select proxies to be used.",
+            "prefill": {
+                "useApifyProxy": true
+            },
+            "default": {
+                "useApifyProxy": true
+            }
+        },
+        "debugMode": {
+            "title": "Debug Mode",
+            "type": "boolean",
+            "description": "Enable verbose logging for troubleshooting.",
+            "prefill": false,
+            "default": false
+        }
+    },
+    "required": ["startUrls", "outputMode"]
+}
