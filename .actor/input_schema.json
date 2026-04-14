@@ -15,12 +15,10 @@
         "includeSections": {
             "title": "Sections to Include",
             "type": "array",
-            "description": "Which types of pages should be extracted and chunked?",
-            "items": { "type": "string" },
-            "editor": "select",
+            "description": "Which types of pages should be extracted and chunked? (e.g. products, collections, faq, policies, reviews_qna, blog, general_pages)",
+            "editor": "stringList",
             "prefill": ["products", "collections", "faq", "policies"],
-            "default": ["products", "collections", "faq", "policies"],
-            "enum": ["products", "collections", "faq", "policies", "reviews_qna", "blog", "general_pages"]
+            "default": ["products", "collections", "faq", "policies"]
         },
         "maxPages": {
             "title": "Max Pages to Crawl",
