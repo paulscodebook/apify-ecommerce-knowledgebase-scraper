@@ -6,7 +6,7 @@ import { InputSettings, ScrapedResult, PageLog, PageType } from './types.js';
 
 export const router = createCheerioRouter();
 
-router.use(async ({ request, $, log, enqueueLinks }) => {
+router.addDefaultHandler(async ({ request, $, log, enqueueLinks }) => {
     // We attach input settings to the crawler so we can access them in the router
     const inputSettings = request.userData.input as InputSettings;
     
