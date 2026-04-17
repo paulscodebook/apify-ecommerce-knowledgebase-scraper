@@ -8,6 +8,33 @@ const turndownService = new TurndownService({
 });
 turndownService.use(gfm);
 
+// Convert images to simple [Image: alt] to save tokens and remove giant CDN urls
+turndownService.addRule('images', {
+    filter: 'img',
+    replacement: function (content, node: any) {
+        const alt = node.alt || node.title || '';
+        return alt ? `[Image: ${alt}]` : '';
+    }
+});
+
+// Avoid wrapping huge block-level elements in markdown links which break when chunked by headers.
+// Instead, just append the link as text if the link text contains newlines or headers.
+turndownService.addRule('links', {
+    filter: 'a',
+    replacement: function (content, node: any) {
+        const href = node.getAttribute('href');
+        const text = content.trim();
+        if (!href) return text;
+        
+        // If it's a huge wrapper link (contains newlines or headers, typical of product cards)
+        if (text.includes('\\n') || text.includes('#')) {
+             // Just append the URL cleanly at the end rather than wrapping the whole block in [...]
+             return `${text}\\nURL: ${href}\\n`;
+        }
+        return `[${text}](${href})`;
+    }
+});
+
 export function cleanText(text: string | null | undefined): string {
     if (!text) return '';
     return text

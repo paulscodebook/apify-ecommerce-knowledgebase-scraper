@@ -23,7 +23,7 @@ export function extractChunksFromPage(
     const chunks: KnowledgeChunk[] = [];
     
     // Remove typical noise elements before chunking
-    $('nav, header, footer, script, style, noscript, iframe, .nav, .header, .footer, .menu').remove();
+    $('nav, header, footer, script, style, noscript, iframe, aside, form, .nav, .header, .footer, .menu, .sidebar, .filters, [role="navigation"], [id*="filter"], [class*="filter"]').remove();
     
     // Often main content is inside main or an article tag
     const mainContent = $('main, article, #MainContent, .main-content').first();
@@ -59,7 +59,7 @@ export function extractChunksFromPage(
         
         // If adding this block exceeds limit, append current and start new
         if (estimateTokens(currentChunkText) + blockTokens > maxTokens && currentChunkText.length > 0) {
-            chunks.push(createChunk(url, currentChunkTitle, currentSectionType, pageType, currentChunkText));
+            chunks.push(createChunk(url, currentChunkTitle, currentSectionType, pageType, processChunkText(currentChunkText, pageTitle)));
             currentChunkText = blockText;
         } else {
             currentChunkText += (currentChunkText ? '\\n\\n' : '') + blockText;
@@ -67,10 +67,31 @@ export function extractChunksFromPage(
     }
 
     if (currentChunkText.trim().length > 0) {
-        chunks.push(createChunk(url, currentChunkTitle, currentSectionType, pageType, currentChunkText));
+        chunks.push(createChunk(url, currentChunkTitle, currentSectionType, pageType, processChunkText(currentChunkText, pageTitle)));
     }
 
     return chunks;
+}
+
+function processChunkText(text: string, pageTitle: string): string {
+    const lines = text.split('\\n');
+    const deduplicatedLines: string[] = [];
+    
+    // Deduplicate repetitive elements like duplicate hover images within a 5-line span
+    for (const line of lines) {
+        const trimmedLine = line.trim();
+        if (trimmedLine && trimmedLine.startsWith('[Image:')) {
+             const recentLines = deduplicatedLines.slice(-5).map(l => l.trim());
+             if (recentLines.includes(trimmedLine)) {
+                 continue;
+             }
+        }
+        deduplicatedLines.push(line);
+    }
+    
+    const cleanedText = deduplicatedLines.join('\\n');
+    // Prepend a semantic breadcrumb to provide context for vector search
+    return `Context: ${pageTitle}\\n\\n${cleanedText}`;
 }
 
 function createChunk(url: string, title: string, sectionType: string, sourceKind: PageType, text: string): KnowledgeChunk {
