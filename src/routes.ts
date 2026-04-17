@@ -6,7 +6,7 @@ import { InputSettings, ScrapedResult, PageLog, PageType } from './types.js';
 
 export const router = createCheerioRouter();
 
-router.addDefaultHandler(async ({ request, $, log, enqueueLinks }) => {
+const handleRequest = async ({ request, $, log, enqueueLinks }: any) => {
     // We attach input settings to the crawler so we can access them in the router
     const inputSettings = request.userData.input as InputSettings;
     
@@ -76,6 +76,7 @@ router.addDefaultHandler(async ({ request, $, log, enqueueLinks }) => {
     // Enqueue links
     await enqueueLinks({
         strategy: 'same-domain',
+        label: 'default',
         transformRequestFunction: (req) => {
             // Apply filtering logic
             if (inputSettings.respectRobotsTxt) {
@@ -93,4 +94,8 @@ router.addDefaultHandler(async ({ request, $, log, enqueueLinks }) => {
         }
     });
 
-});
+};
+
+router.addHandler('default', handleRequest);
+router.addHandler('undefined', handleRequest); // Safeguard
+router.addDefaultHandler(handleRequest);

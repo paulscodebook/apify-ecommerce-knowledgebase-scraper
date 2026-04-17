@@ -37,6 +37,7 @@ const crawler = new CheerioCrawler({
 
 const startRequests = input.startUrls.map(req => ({
     url: req.url,
+    label: 'default',
     userData: { input } // Inject input settings to be readable in router
 }));
 
@@ -46,7 +47,7 @@ for (const req of startRequests) {
     if (req.url.endsWith('sitemap.xml')) {
         try {
             const { urls } = await Sitemap.load(req.url);
-            initialRequests.push(...urls.map(u => ({ url: u, userData: { input } })));
+            initialRequests.push(...urls.map(u => ({ url: u, label: 'default', userData: { input } })));
             log.info(`Enqueued ${urls.length} URLs from sitemap ${req.url}`);
         } catch (e: any) {
             log.warning(`Failed to load sitemap ${req.url}: ${e.message}`);
