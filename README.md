@@ -62,6 +62,3 @@ Pushes clean text chunks properly bounded and estimated for tokens into the `kno
 ## Limitations
 - **Render Heavy Sites**: Currently operates on a high-speed `CheerioCrawler`. Highly complex SPAs without Server-Side Rendering (SSR) might have some data hidden. Shopify and most modern ecommerce platforms provide SSR or JSON-LD which this actor consumes natively.
 - **Paywalls/Logins**: Does not support bypassing logins or captchas outside of Apify's standard proxy rotation parameters.
-
-## Pricing Suggestions
-*Recommended for Platform Launch: $10 - $25/month rental, or $1.00 per 1,000 pages for Pay-per-Result.*
