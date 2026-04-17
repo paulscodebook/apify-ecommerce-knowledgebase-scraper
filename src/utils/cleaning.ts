@@ -11,7 +11,7 @@ turndownService.use(gfm);
 // Convert images to simple [Image: alt] to save tokens and remove giant CDN urls
 turndownService.addRule('images', {
     filter: 'img',
-    replacement: function (content, node: any) {
+    replacement: function (content: string, node: any) {
         const alt = node.alt || node.title || '';
         return alt ? `[Image: ${alt}]` : '';
     }
@@ -21,7 +21,7 @@ turndownService.addRule('images', {
 // Instead, just append the link as text if the link text contains newlines or headers.
 turndownService.addRule('links', {
     filter: 'a',
-    replacement: function (content, node: any) {
+    replacement: function (content: string, node: any) {
         const href = node.getAttribute('href');
         const text = content.trim();
         if (!href) return text;
