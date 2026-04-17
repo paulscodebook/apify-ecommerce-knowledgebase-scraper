@@ -4,7 +4,7 @@
     "properties": {
         "dataset": {
             "title": "Extracted Data (Dataset)",
-            "type": "object",
+            "type": "string",
             "description": "The master dataset containing both product JSON catalog entries and formatted Markdown RAG chunks.",
             "template": "{{links.apiDefaultDatasetUrl}}/items"
         }
