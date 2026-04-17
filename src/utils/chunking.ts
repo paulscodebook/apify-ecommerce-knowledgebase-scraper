@@ -74,14 +74,14 @@ export function extractChunksFromPage(
 }
 
 function processChunkText(text: string, pageTitle: string): string {
-    const lines = text.split('\\n');
+    const lines = text.split('\n');
     const deduplicatedLines: string[] = [];
     
     // Deduplicate repetitive elements like duplicate hover images within a 5-line span
     for (const line of lines) {
         const trimmedLine = line.trim();
         if (trimmedLine && trimmedLine.startsWith('[Image:')) {
-             const recentLines = deduplicatedLines.slice(-5).map(l => l.trim());
+             const recentLines = deduplicatedLines.slice(-5).map((l: string) => l.trim());
              if (recentLines.includes(trimmedLine)) {
                  continue;
              }
@@ -89,9 +89,9 @@ function processChunkText(text: string, pageTitle: string): string {
         deduplicatedLines.push(line);
     }
     
-    const cleanedText = deduplicatedLines.join('\\n');
+    const cleanedText = deduplicatedLines.join('\n');
     // Prepend a semantic breadcrumb to provide context for vector search
-    return `Context: ${pageTitle}\\n\\n${cleanedText}`;
+    return `Context: ${pageTitle}\n\n${cleanedText}`;
 }
 
 function createChunk(url: string, title: string, sectionType: string, sourceKind: PageType, text: string): KnowledgeChunk {

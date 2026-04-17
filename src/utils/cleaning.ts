@@ -27,9 +27,9 @@ turndownService.addRule('links', {
         if (!href) return text;
         
         // If it's a huge wrapper link (contains newlines or headers, typical of product cards)
-        if (text.includes('\\n') || text.includes('#')) {
+        if (text.includes('\n') || text.includes('#')) {
              // Just append the URL cleanly at the end rather than wrapping the whole block in [...]
-             return `${text}\\nURL: ${href}\\n`;
+             return `${text}\nURL: ${href}\n`;
         }
         return `[${text}](${href})`;
     }
