@@ -1,0 +1,132 @@
+{
+    "actorSpecification": 1,
+    "fields": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+            "__type": {
+                "type": "string",
+                "description": "Indicates the type of extracted item: 'chunk' for RAG text, 'product' for catalog item.",
+                "example": "chunk"
+            },
+            "url": {
+                "type": "string",
+                "description": "The URL of the source page."
+            },
+            "title": {
+                "type": "string",
+                "description": "Title of the page or product."
+            },
+            "section_type": {
+                "type": "string",
+                "description": "Category of the chunk (general_content, faq_answer, policy_section)."
+            },
+            "source_kind": {
+                "type": "string",
+                "description": "The PageType classification (product, collection, policy, faq, home)."
+            },
+            "text": {
+                "type": "string",
+                "description": "The formatted Markdown content of the knowledge chunk ready for vectorization."
+            },
+            "token_estimate": {
+                "type": "integer",
+                "description": "Estimated OpenAI token length of the text chunk."
+            },
+            "price": {
+                "type": "number",
+                "description": "Numeric price for product items."
+            },
+            "currency": {
+                "type": "string",
+                "description": "Currency code for product price."
+            },
+            "brand": {
+                "type": "string",
+                "description": "Product brand name."
+            },
+            "categories": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "List of product categories or breadcrumbs."
+            },
+            "last_seen_at": {
+                "type": "string",
+                "description": "ISO timestamp of extraction."
+            }
+        },
+        "required": ["__type", "url", "last_seen_at"]
+    },
+    "views": {
+        "overview": {
+            "title": "Extraction Overview",
+            "description": "Provides a quick breakdown of extracted Chunks and Products.",
+            "transformation": {
+                "fields": [
+                    "__type",
+                    "url",
+                    "title",
+                    "token_estimate",
+                    "price",
+                    "brand"
+                ]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "__type": {
+                        "label": "Type",
+                        "format": "text"
+                    },
+                    "url": {
+                        "label": "Source URL",
+                        "format": "link"
+                    },
+                    "title": {
+                        "label": "Title",
+                        "format": "text"
+                    },
+                    "token_estimate": {
+                        "label": "Est. Tokens",
+                        "format": "number"
+                    },
+                    "price": {
+                        "label": "Price",
+                        "format": "text"
+                    }
+                }
+            }
+        },
+        "ragChunks": {
+            "title": "RAG Chunks",
+            "description": "Only displays text chunks intended for embedding pipelines.",
+            "transformation": {
+                "fields": [
+                    "source_kind",
+                    "section_type",
+                    "text",
+                    "token_estimate",
+                    "url"
+                ],
+                "flatten": ["text"]
+            },
+            "display": {
+                "component": "table",
+                "properties": {
+                    "source_kind": {
+                        "label": "Source",
+                        "format": "text"
+                    },
+                    "text": {
+                        "label": "Markdown Payload",
+                        "format": "text"
+                    },
+                    "token_estimate": {
+                        "label": "Tokens",
+                        "format": "number"
+                    }
+                }
+            }
+        }
+    }
+}

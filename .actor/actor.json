@@ -1,11 +1,14 @@
 {
     "actorSpecification": 1,
     "name": "ecommerce-knowledgebase-scraper",
-    "title": "Ecommerce Store Knowledgebase Scraper",
+    "title": "Ecommerce RAG Ingestion Engine",
     "description": "Extracts structured product catalog data and AI-ready RAG chunks from ecommerce stores (Shopify, WooCommerce, etc.).",
     "version": "0.0.1",
     "meta": {
         "templateId": "ts-crawlee-cheerio"
+    },
+    "storages": {
+        "dataset": "./dataset_schema.json"
     },
     "dockerfile": "./Dockerfile"
 }
