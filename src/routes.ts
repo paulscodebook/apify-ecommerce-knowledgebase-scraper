@@ -30,8 +30,7 @@ const handleRequest = async ({ request, $, log, enqueueLinks }: CheerioCrawlingC
             const productData = extractShopifyProduct($, request.loadedUrl || request.url);
             
             if (inputSettings.outputMode === 'catalog_only' || inputSettings.outputMode === 'both') {
-                const productsDataset = await Dataset.open('products');
-                await productsDataset.pushData(productData);
+                await Dataset.pushData({ __type: 'product', ...productData });
             }
             
             result.product = productData;
@@ -41,8 +40,7 @@ const handleRequest = async ({ request, $, log, enqueueLinks }: CheerioCrawlingC
             if (inputSettings.outputMode === 'knowledge_only' || inputSettings.outputMode === 'both') {
                 const chunks = extractChunksFromPage($, request.loadedUrl || request.url, productData.title, pageType, inputSettings.chunkSizeTokens);
                 if (chunks.length > 0) {
-                    const knowledgeDataset = await Dataset.open('knowledge_chunks');
-                    await knowledgeDataset.pushData(chunks);
+                    await Dataset.pushData(chunks.map(c => ({ __type: 'chunk', ...c })));
                 }
             }
         } catch (error: any) {
@@ -58,8 +56,7 @@ const handleRequest = async ({ request, $, log, enqueueLinks }: CheerioCrawlingC
                 const chunks = extractChunksFromPage($, request.loadedUrl || request.url, title, pageType, inputSettings.chunkSizeTokens);
                 
                 if (chunks.length > 0) {
-                    const knowledgeDataset = await Dataset.open('knowledge_chunks');
-                    await knowledgeDataset.pushData(chunks);
+                    await Dataset.pushData(chunks.map(c => ({ __type: 'chunk', ...c })));
                 }
                 pageLog.extractor_used = 'chunking';
             } catch (error: any) {
@@ -69,7 +66,7 @@ const handleRequest = async ({ request, $, log, enqueueLinks }: CheerioCrawlingC
         }
     }
 
-    // Push Page Log
+    // Push Page Log (to named dataset to avoid cluttering main output)
     const pagesDataset = await Dataset.open('pages');
     await pagesDataset.pushData(pageLog);
 
