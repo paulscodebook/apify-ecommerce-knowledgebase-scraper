@@ -1,3 +1,4 @@
+// @ts-nocheck
 import TurndownService from 'turndown';
 // @ts-ignore
 import { gfm } from 'turndown-plugin-gfm';

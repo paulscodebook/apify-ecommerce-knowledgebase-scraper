@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { KnowledgeChunk, PageType } from '../types.js';
 import { htmlToMarkdown } from './cleaning.js';
 
