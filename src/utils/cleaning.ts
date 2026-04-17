@@ -11,8 +11,8 @@ turndownService.use(gfm);
 export function cleanText(text: string | null | undefined): string {
     if (!text) return '';
     return text
-        .replace(/[\\r\\n\\t]+/g, ' ')
-        .replace(/\\s{2,}/g, ' ')
+        .replace(/[\r\n\t]+/g, ' ')
+        .replace(/\s{2,}/g, ' ')
         .trim();
 }
 
@@ -31,11 +31,11 @@ export function extractPrice(priceStr: string | null | undefined): number | unde
 }
 
 export function htmlToMarkdown(html: string): string {
-    return cleanText(turndownService.turndown(html));
+    return turndownService.turndown(html).trim();
 }
 
 export function cheerioToMarkdown($: any, el: any): string {
     const html = $(el).html();
     if (!html) return '';
-    return cleanText(turndownService.turndown(html));
+    return turndownService.turndown(html).trim();
 }
