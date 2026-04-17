@@ -23,8 +23,19 @@ const handleRequest = async ({ request, $, log, enqueueLinks }: CheerioCrawlingC
         extractor_used: 'none'
     };
 
+    const sectionMapping: Record<PageType, string> = {
+        'product': 'products',
+        'collection': 'collections',
+        'policy': 'policies',
+        'faq': 'faq',
+        'blog': 'blog',
+        'general': 'general_pages',
+        'unknown': 'unknown'
+    };
+    const inputSectionName = sectionMapping[pageType] || pageType;
+
     // Extract Product Data
-    if (pageType === 'product' && inputSettings.includeSections.includes('products')) {
+    if (pageType === 'product' && inputSettings.includeSections.includes(inputSectionName)) {
         try {
             // Priority default to shopify extractor (it falls back to generic safely)
             const productData = extractShopifyProduct($, request.loadedUrl || request.url);
@@ -49,7 +60,7 @@ const handleRequest = async ({ request, $, log, enqueueLinks }: CheerioCrawlingC
         }
     } 
     // Extract Knowledge Chunks from text pages
-    else if (['policy', 'faq', 'blog', 'collection', 'general'].includes(pageType) && inputSettings.includeSections.includes(pageType === 'general' ? 'general_pages' : pageType)) {
+    else if (['policy', 'faq', 'blog', 'collection', 'general'].includes(pageType) && inputSettings.includeSections.includes(inputSectionName)) {
         if (inputSettings.outputMode === 'knowledge_only' || inputSettings.outputMode === 'both') {
             try {
                 const title = $('title').text() || $('h1').first().text() || 'Unknown Page';
