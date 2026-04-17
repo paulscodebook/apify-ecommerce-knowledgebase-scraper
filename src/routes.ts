@@ -1,4 +1,4 @@
-import { createCheerioRouter, Dataset } from 'crawlee';
+import { CheerioCrawlingContext, createCheerioRouter, Dataset } from 'crawlee';
 import { classifyUrl } from './utils/classification.js';
 import { extractShopifyProduct } from './extractors/shopify.js';
 import { extractChunksFromPage } from './utils/chunking.js';
@@ -6,7 +6,7 @@ import { InputSettings, ScrapedResult, PageLog, PageType } from './types.js';
 
 export const router = createCheerioRouter();
 
-const handleRequest = async ({ request, $, log, enqueueLinks }: any) => {
+const handleRequest = async ({ request, $, log, enqueueLinks }: CheerioCrawlingContext) => {
     // We attach input settings to the crawler so we can access them in the router
     const inputSettings = request.userData.input as InputSettings;
     
@@ -77,7 +77,7 @@ const handleRequest = async ({ request, $, log, enqueueLinks }: any) => {
     await enqueueLinks({
         strategy: 'same-domain',
         label: 'default',
-        transformRequestFunction: (req) => {
+        transformRequestFunction: (req: any) => {
             // Apply filtering logic
             if (inputSettings.respectRobotsTxt) {
                 // Robots txt is handled by CheerioCrawler options natively mostly, we can skip manual handling here 
