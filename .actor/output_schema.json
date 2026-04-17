@@ -1,0 +1,12 @@
+{
+    "actorOutputSchemaVersion": 1,
+    "title": "Ecommerce RAG Engine Output",
+    "properties": {
+        "dataset": {
+            "title": "Extracted Data (Dataset)",
+            "type": "object",
+            "description": "The master dataset containing both product JSON catalog entries and formatted Markdown RAG chunks.",
+            "template": "{{links.apiDefaultDatasetUrl}}/items"
+        }
+    }
+}
